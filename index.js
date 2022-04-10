@@ -12,7 +12,7 @@ const background = new Sprite ({
         x: 0,
         y: 0
     },
-    imageSrc: './img/moon1.png'
+    imageSrc: './img/witcher.png'
 })
 
 
@@ -29,6 +29,13 @@ const player = new Fighter ({
 offset: {
     x: 0,
     y: 0
+},
+imageSrc: './img/Hero2/Sprites/Idle.png',
+framesMax: 8,
+scale: 2.5,
+offset: {
+    x: 215,
+    y: 180
 }
 })
 
@@ -77,7 +84,7 @@ function animate(){
     c.fillRect(0, 0, canvas.width, canvas.height)
     background.update()
    player.update()
-   enemy.update()
+   //enemy.update()
 
 player.velocity.x =0
 enemy.velocity.x =0
