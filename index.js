@@ -30,44 +30,49 @@ offset: {
     x: 0,
     y: 0
 },
-imageSrc: './img/Hero2/Sprites/Idle.png',
-framesMax: 4,
-scale: 2.5,
-offset: {
+imageSrc: './img/samuraiMack/Idle.png',
+  framesMax: 8,
+  scale: 2.5,
+  offset: {
     x: 215,
-    y: 180
-},
-sprites: {
+    y: 157
+  },
+  sprites: {
     idle: {
-        imageSrc: './img/Hero2/Sprites/Idle.png',
-        framesMax: 4
+      imageSrc: './img/samuraiMack/Idle.png',
+      framesMax: 8
     },
     run: {
-        imageSrc: './img/Hero2/Sprites/Run.png',
-        framesMax: 8,
-        image: new Image()
+      imageSrc: './img/samuraiMack/Run.png',
+      framesMax: 8
     },
     jump: {
-        imageSrc: './img/Hero2/Sprites/Jump.png',
-        framesMax: 2
-        
+      imageSrc: './img/samuraiMack/Jump.png',
+      framesMax: 2
     },
     fall: {
-        imageSrc: './img/Hero2/Sprites/Fall.png',
-        framesMax: 2
+      imageSrc: './img/samuraiMack/Fall.png',
+      framesMax: 2
     },
     attack1: {
-        imageSrc: './img/Hero2/Sprites/Attack1.png',
-        framesMax: 4
+      imageSrc: './img/samuraiMack/Attack1.png',
+      framesMax: 6
+    },
+    takeHit: {
+      imageSrc: './img/samuraiMack/Take Hit.png',
+      framesMax: 4
+    },
+    death: {
+      imageSrc: './img/samuraiMack/Death.png',
+      framesMax: 6
     }
-    
-},
+  },
 attackBox : {
     offset: {
-        x: 0,
-        y:0
+        x: 100,
+        y: 50
     },
-    width: 100,
+    width: 160,
     height: 50
 }
 })
@@ -87,36 +92,43 @@ offset: {
     x: -50,
     y:0
 },
-imageSrc: './img/Huntress/Sprites/Idle.png',
-framesMax: 8,
-scale: 2.5,
-offset: {
-    x: 200,
-    y: 100
-},
-sprites: {
-    idle: {
-        imageSrc: './img/Huntress/Sprites/Idle.png',
-        framesMax: 8
-    },
+      imageSrc: './img/kenji/Idle.png',
+      framesMax: 4,
+      scale: 2.5,
+      offset: {
+        x: 215,
+        y: 180
+      },
+      sprites: {
+        idle: {
+          imageSrc: './img/kenji/Idle.png',
+          framesMax: 4
+        },
     run: {
-        imageSrc: './img/Huntress/Sprites/Run.png',
-        framesMax: 8,
-        image: new Image()
+      imageSrc: './img/kenji/Run.png',
+      framesMax: 8
     },
     jump: {
-        imageSrc: './img/Huntress/Sprites/Jump.png',
-        framesMax: 2
-        
+      imageSrc: './img/kenji/Jump.png',
+      framesMax: 2
     },
     fall: {
-        imageSrc: './img/Huntress/Sprites/Fall.png',
-        framesMax: 2
+      imageSrc: './img/kenji/Fall.png',
+      framesMax: 2
     },
     attack1: {
-        imageSrc: './img/Huntress/Sprites/Attack1.png',
-        framesMax: 5
+      imageSrc: './img/kenji/Attack1.png',
+      framesMax: 4
     },
+    takeHit: {
+      imageSrc: './img/kenji/Take hit.png',
+      framesMax: 3
+    },
+    death: {
+      imageSrc: './img/kenji/Death.png',
+      framesMax: 7
+    }
+  },
     attackBox : {
         offset: {
             x: -170,
@@ -125,11 +137,9 @@ sprites: {
         width: 170,
         height: 50
     }
-    
-}
 })
 
-enemy.draw()
+console.log(player)
 
 const keys = {
     a:  {
@@ -156,6 +166,8 @@ function animate(){
     c.fillStyle = 'black'
     c.fillRect(0, 0, canvas.width, canvas.height)
     background.update()
+    c.fillStyle = 'rgba(255, 255, 255, 0.15)'
+    c.fillRect(0, 0, canvas.width, canvas.height)
    player.update()
    enemy.update()
 
@@ -165,7 +177,7 @@ enemy.velocity.x =0
 //player movement
 if (keys.a.pressed && player.lastKey === 'a') {
     player.velocity.x = -5
-player.switchSprite('run')
+    player.switchSprite('run')
 } else if (keys.d.pressed && player.lastKey === 'd') {
     player.velocity.x = 5
 player.switchSprite('run')
@@ -174,7 +186,7 @@ player.switchSprite('run')
 
 }
 //jumping 
-if (player.velocity.y <0) {
+if (player.velocity.y < 0) {
     player.switchSprite('jump')
 } else if (player.velocity.y > 0) {
     player.switchSprite('fall')
@@ -187,26 +199,30 @@ if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
 } else if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight') {
     enemy.velocity.x = 5
     enemy.switchSprite('run')
-
 } else {
     enemy.switchSprite('idle')
 }
+
 //jumping
-if (enemy.velocity.y <0) {
+if (enemy.velocity.y < 0) {
     enemy.switchSprite('jump')
 } else if (enemy.velocity.y > 0) {
     enemy.switchSprite('fall')
 }
 
-//detect for collision
+//detect for collision & enemy gets hit
 if (rectangularCollision({
     rectangle1: player,
     rectangle2: enemy
  }) &&
-    player.isAttacking && player.framesCurrent === 4) {
- player.isAttacking = false
- enemy.health -=20
-document.querySelector('#enemyHealth').style.width= enemy.health + "%"
+    player.isAttacking &&
+     player.framesCurrent === 4) {
+        enemy.takeHit()
+        player.isAttacking = false
+
+        gsap.to('#enemyHealth', {
+            width: enemy.health + '%'
+          })
  }
 
  // if player misses
@@ -215,15 +231,25 @@ document.querySelector('#enemyHealth').style.width= enemy.health + "%"
      player.isAttacking = false
  }
 
+ //if player is hit
+
  if (rectangularCollision({
     rectangle1: enemy,
     rectangle2: player
  }) &&
-    enemy.isAttacking && enemy.framesCurrent === 2) {
- enemy.isAttacking = false
- player.health -=20
- document.querySelector('#playerHealth').style.width= player.health + "%"
+    enemy.isAttacking && 
+    enemy.framesCurrent === 2
+    ) {
+        player.takeHit()
+        enemy.isAttacking = false
+
+        gsap.to('#playerHealth', {
+            width: player.health + '%'
+          })
 }
+
+
+//if player misses
 
 if (enemy.isAttacking && enemy.framesCurrent === 4) {
     enemy.isAttacking = false
@@ -240,6 +266,7 @@ if (enemy.health <= 0 || player.health <=0) {
 animate()
 
 window.addEventListener('keydown', (event) => {
+    if (!player.dead) {
     switch(event.key) {
         case 'd':
         keys.d.pressed = true
@@ -255,6 +282,9 @@ window.addEventListener('keydown', (event) => {
         case ' ':
         player.attack()
         break
+    }
+}           if (!enemy.dead) {
+    switch (event.key) {
             case 'ArrowRight':
             keys.ArrowRight.pressed = true
             enemy.lastKey = "ArrowRight"
@@ -270,6 +300,7 @@ window.addEventListener('keydown', (event) => {
             enemy.attack()      
             break
     }
+}
 })
 
 window.addEventListener('keyup', (event) => {
