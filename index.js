@@ -5,6 +5,7 @@ canvas.width = 1024
 canvas.height = 576
 
 c.fillRect(0, 0, canvas.width, canvas.height)
+
 const gravity = 0.7
  
 const background = new Sprite ({
@@ -148,9 +149,6 @@ const keys = {
     d: {
         pressed: false
     },
-    //w: {
-        //pressed: false
-    //},
     ArrowRight: {
         pressed: false
     },
@@ -175,6 +173,7 @@ player.velocity.x =0
 enemy.velocity.x =0
 
 //player movement
+
 if (keys.a.pressed && player.lastKey === 'a') {
     player.velocity.x = -5
     player.switchSprite('run')
@@ -211,12 +210,14 @@ if (enemy.velocity.y < 0) {
 }
 
 //detect for collision & enemy gets hit
-if (rectangularCollision({
+if (
+    rectangularCollision({
     rectangle1: player,
     rectangle2: enemy
  }) &&
     player.isAttacking &&
-     player.framesCurrent === 4) {
+     player.framesCurrent === 4
+     ) {
         enemy.takeHit()
         player.isAttacking = false
 
@@ -259,8 +260,7 @@ if (enemy.isAttacking && enemy.framesCurrent === 4) {
 
 if (enemy.health <= 0 || player.health <=0) {
     determineWinner({player, enemy, timerId})
-}
-
+   }
 }
 
 animate()
@@ -297,7 +297,8 @@ window.addEventListener('keydown', (event) => {
             enemy.velocity.y = -20
             break
             case 'ArrowDown':
-            enemy.attack()      
+            enemy.attack()     
+
             break
     }
 }
