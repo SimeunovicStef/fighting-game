@@ -31,7 +31,7 @@ offset: {
     y: 0
 },
 imageSrc: './img/Hero2/Sprites/Idle.png',
-framesMax: 8,
+framesMax: 4,
 scale: 2.5,
 offset: {
     x: 215,
@@ -40,7 +40,7 @@ offset: {
 sprites: {
     idle: {
         imageSrc: './img/Hero2/Sprites/Idle.png',
-        framesMax: 8
+        framesMax: 4
     },
     run: {
         imageSrc: './img/Hero2/Sprites/Run.png',
@@ -55,7 +55,12 @@ sprites: {
     fall: {
         imageSrc: './img/Hero2/Sprites/Fall.png',
         framesMax: 2
+    },
+    attack1: {
+        imageSrc: './img/Hero2/Sprites/Attack1.png',
+        framesMax: 4
     }
+    
 }
 })
 
@@ -73,6 +78,38 @@ color: 'blue',
 offset: {
     x: -50,
     y:0
+},
+imageSrc: './img/Huntress/Sprites/Idle.png',
+framesMax: 8,
+scale: 2.5,
+offset: {
+    x: 200,
+    y: 100
+},
+sprites: {
+    idle: {
+        imageSrc: './img/Huntress/Sprites/Idle.png',
+        framesMax: 8
+    },
+    run: {
+        imageSrc: './img/Huntress/Sprites/Run.png',
+        framesMax: 8,
+        image: new Image()
+    },
+    jump: {
+        imageSrc: './img/Huntress/Sprites/Jump.png',
+        framesMax: 2
+        
+    },
+    fall: {
+        imageSrc: './img/Huntress/Sprites/Fall.png',
+        framesMax: 2
+    },
+    attack1: {
+        imageSrc: './img/Huntress/Sprites/Attack1.png',
+        framesMax: 5
+    }
+    
 }
 })
 
@@ -104,7 +141,7 @@ function animate(){
     c.fillRect(0, 0, canvas.width, canvas.height)
     background.update()
    player.update()
-   //enemy.update()
+   enemy.update()
 
 player.velocity.x =0
 enemy.velocity.x =0
@@ -120,7 +157,7 @@ player.switchSprite('run')
     player.switchSprite('idle')
 
 }
-
+//jumping 
 if (player.velocity.y <0) {
     player.switchSprite('jump')
 } else if (player.velocity.y > 0) {
@@ -130,8 +167,19 @@ if (player.velocity.y <0) {
 //enemy movement
 if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
     enemy.velocity.x = -5
+    enemy.switchSprite('run')
 } else if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight') {
     enemy.velocity.x = 5
+    enemy.switchSprite('run')
+
+} else {
+    enemy.switchSprite('idle')
+}
+//jumping
+if (enemy.velocity.y <0) {
+    enemy.switchSprite('jump')
+} else if (enemy.velocity.y > 0) {
+    enemy.switchSprite('fall')
 }
 
 //detect for collision
@@ -193,7 +241,7 @@ window.addEventListener('keydown', (event) => {
             enemy.velocity.y = -20
             break
             case 'ArrowDown':
-            enemy.isAttacking = true
+            enemy.attack()      
             break
     }
 })
