@@ -36,6 +36,26 @@ scale: 2.5,
 offset: {
     x: 215,
     y: 180
+},
+sprites: {
+    idle: {
+        imageSrc: './img/Hero2/Sprites/Idle.png',
+        framesMax: 8
+    },
+    run: {
+        imageSrc: './img/Hero2/Sprites/Run.png',
+        framesMax: 8,
+        image: new Image()
+    },
+    jump: {
+        imageSrc: './img/Hero2/Sprites/Jump.png',
+        framesMax: 2
+        
+    },
+    fall: {
+        imageSrc: './img/Hero2/Sprites/Fall.png',
+        framesMax: 2
+    }
 }
 })
 
@@ -92,8 +112,19 @@ enemy.velocity.x =0
 //player movement
 if (keys.a.pressed && player.lastKey === 'a') {
     player.velocity.x = -5
+player.switchSprite('run')
 } else if (keys.d.pressed && player.lastKey === 'd') {
     player.velocity.x = 5
+player.switchSprite('run')
+} else {
+    player.switchSprite('idle')
+
+}
+
+if (player.velocity.y <0) {
+    player.switchSprite('jump')
+} else if (player.velocity.y > 0) {
+    player.switchSprite('fall')
 }
 
 //enemy movement
