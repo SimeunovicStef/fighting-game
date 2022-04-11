@@ -61,6 +61,14 @@ sprites: {
         framesMax: 4
     }
     
+},
+attackBox : {
+    offset: {
+        x: 0,
+        y:0
+    },
+    width: 100,
+    height: 50
 }
 })
 
@@ -108,6 +116,14 @@ sprites: {
     attack1: {
         imageSrc: './img/Huntress/Sprites/Attack1.png',
         framesMax: 5
+    },
+    attackBox : {
+        offset: {
+            x: -170,
+            y: 50
+        },
+        width: 170,
+        height: 50
     }
     
 }
@@ -187,20 +203,30 @@ if (rectangularCollision({
     rectangle1: player,
     rectangle2: enemy
  }) &&
-    player.isAttacking) {
+    player.isAttacking && player.framesCurrent === 4) {
  player.isAttacking = false
  enemy.health -=20
 document.querySelector('#enemyHealth').style.width= enemy.health + "%"
+ }
+
+ // if player misses
+
+ if (player.isAttacking && player.framesCurrent === 2) {
+     player.isAttacking = false
  }
 
  if (rectangularCollision({
     rectangle1: enemy,
     rectangle2: player
  }) &&
-    enemy.isAttacking) {
+    enemy.isAttacking && enemy.framesCurrent === 2) {
  enemy.isAttacking = false
  player.health -=20
  document.querySelector('#playerHealth').style.width= player.health + "%"
+}
+
+if (enemy.isAttacking && enemy.framesCurrent === 4) {
+    enemy.isAttacking = false
 }
 
 //end game based on health
